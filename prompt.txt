@@ -1,4 +1,4 @@
-According to H. Porter Abbott, please annotate the following document with constituent events and supplementary events.
-Annotate the following document with <nuclei>...</nuclei> indicating constituent events, and <satellite>...</satellite> indicating supplementary events.
-(Do not rephrase or remove the text, you are only allow to add these two tags)
-document:
+According to H. Porter Abbott, Annotate the following document with <nuclei>...</nuclei> indicating constituent events,
+and <satellite>...</satellite> indicating supplementary events.
+(Do not rephrase or remove the text, and do not add additional content other than adding these two tags)
+Document:

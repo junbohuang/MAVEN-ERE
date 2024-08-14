@@ -27,7 +27,7 @@ def annotate():
     file = open(f"prompt.txt", "r")
     prompt = file.read()
     df = pd.read_csv("./data/MAVEN_ERE/train_joint.csv")
-    prompts = [f"{prompt}\n{snippet}\n" for snippet in df["text"].values]
+    prompts = [f"{prompt}\n{snippet}\n\n[Paste the document here, add the tags and remove the brackets]" for snippet in df["text"].values]
     outputs = llm.generate(prompts, sampling_params)
     generated_texts = [output.outputs[0].text for output in outputs]
     print(generated_texts[:5])
