@@ -39,7 +39,7 @@ def annotate():
     sampling_params = SamplingParams(temperature=0.9, top_p=0.95, max_tokens=500)
     file = open(f"prompt.txt", "r")
     prompt = file.read()
-    with open("./data/MAVEN_ERE/train_joint.txt") as f:
+    with open("./data/MAVEN_ERE/train_joint.txt", encoding='utf-8') as f:
         data = f.readlines()
     prompts = [f"{prompt}\n{snippet}\n" for snippet in data]
     outputs = llm.generate(prompts, sampling_params)
@@ -48,7 +48,7 @@ def annotate():
         for line in generated_texts:
             f.write(f"{line}\n")
 
-    with open("./data/MAVEN_ERE/valid_joint.txt") as f:
+    with open("./data/MAVEN_ERE/valid_joint.txt", encoding='utf-8') as f:
         data = f.readlines()
     prompts = [f"{prompt}\n{snippet}\n" for snippet in data]
     outputs = llm.generate(prompts, sampling_params)
