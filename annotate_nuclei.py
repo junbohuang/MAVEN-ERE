@@ -2,21 +2,23 @@ import json
 from vllm import LLM, SamplingParams
 import requests
 import pandas as pd
+from itertools import chain
+
 
 def tag_mention_per_sentence(mention: dict, tokens: list[list]):
-    tokenized_sentence = tokens[int(mention["sent_id"])]
-    retrieved_mention = tokenized_sentence[int(mention["offset"][0]): int(mention["offset"][1])]
+    tokenized_sentence = tokens[mention["sent_id"]]
+    retrieved_mention = tokenized_sentence[mention["offset"][0]: mention["offset"][1]]
     assert retrieved_mention == mention["trigger_word"]
-    tokenized_sentence[int(mention["offset"][0])] = "<event>"+tokenized_sentence[int(mention["offset"][0])]
-    tokenized_sentence[int(mention["offset"][1])-1] = tokenized_sentence[int(mention["offset"][1])-1]+"</event>"
+    tokenized_sentence[mention["offset"][0]] = "<event>"+tokenized_sentence[mention["offset"][0]]
+    tokenized_sentence[mention["offset"][1]-1] = tokenized_sentence[mention["offset"][1]-1]+"</event>"
     return tokenized_sentence
 
 def tag_mention_per_doc(data: dict):
     tagged_tokens = data["tokens"]
-    events = [event for event in data["events"]]
-    mentions = [event["mention"] for event in events]
+    mentions = list(chain(**[mention for event in data["events"] for mention in event["mention"]]))
+    print(mentions)
     for mention in mentions:
-        tagged_tokens[int(mention["sent_id"])] = tag_mention_per_sentence(mention, tagged_tokens)
+        tagged_tokens[mention["sent_id"]] = tag_mention_per_sentence(mention, tagged_tokens)
     return tokens_to_sentences(tagged_tokens)
 
 def tokens_to_sentences(tagged_tokens):
