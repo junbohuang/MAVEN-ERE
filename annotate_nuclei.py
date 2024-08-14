@@ -1,4 +1,6 @@
 import json
+from vllm import LLM, SamplingParams
+import requests
 
 
 def creating_csv():
