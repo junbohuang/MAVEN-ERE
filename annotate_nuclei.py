@@ -8,7 +8,7 @@ def creating_csv():
     for d in data:
         documents.append(' '.join(d["sentences"]))
     with open("./data/MAVEN_ERE/train_joint.txt", 'w') as f:
-        for line in lines:
+        for line in documents:
             f.write(f"{line}\n")
 
     documents = []
@@ -17,7 +17,7 @@ def creating_csv():
     for d in data:
         documents.append(' '.join(d["sentences"]))
     with open("./data/MAVEN_ERE/valid_joint.txt", 'w') as f:
-        for line in lines:
+        for line in documents:
             f.write(f"{line}\n")
 
 def llama3_skynet_api(snippet, prompt):
