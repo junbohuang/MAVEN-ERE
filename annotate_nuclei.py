@@ -15,7 +15,7 @@ def tag_mention_per_sentence(mention: dict, tokens: list[list]):
 
 def tag_mention_per_doc(data: dict):
     tagged_tokens = data["tokens"]
-    mentions = list(chain(**[mention for event in data["events"] for mention in event["mention"]]))
+    mentions = [mention for event in data["events"] for mention in event["mention"]]
     print(mentions)
     for mention in mentions:
         tagged_tokens[mention["sent_id"]] = tag_mention_per_sentence(mention, tagged_tokens)
