@@ -1,8 +1,4 @@
 According to H. Porter Abbott, please annotate the following document with constituent events and supplementary events.
-Iterate over each sentence for each document d_i, and remove this sentence to acquire a reduced document d_j,
-and compute a similarity score between d-i amd d_j. Depending on this score, annotate the sentence indicating
-constituent events with <nuclei>...</nuclei> and supplementary events as <satellite>...</satellite>.
-
-Note that nuclei are events that depicts causal relation with another event within the same news narrative.
-
+Annotate the following document with <nuclei>...</nuclei> indicating constituent events, and <satellite>...</satellite> indicating supplementary events.
+(Do not rephrase or remove the text, you are only allow to add these two tags)
 document:
