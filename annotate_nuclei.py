@@ -1,7 +1,7 @@
 import json
 from vllm import LLM, SamplingParams
 import requests
-
+import pandas as pd
 
 def creating_csv():
     documents = []
@@ -9,29 +9,16 @@ def creating_csv():
         data = [json.loads(line) for line in f]
     for d in data:
         documents.append(' '.join(d["sentences"]))
-    with open("./data/MAVEN_ERE/train_joint.txt", 'w') as f:
-        for line in documents:
-            f.write(f"{line}\n")
+    df = pd.DataFrame({"text": documents})
+    df.to_csv("./data/MAVEN_ERE/train_joint.csv", index=False)
 
     documents = []
     with open("./data/MAVEN_ERE/valid.jsonl", 'r') as f:
         data = [json.loads(line) for line in f]
     for d in data:
         documents.append(' '.join(d["sentences"]))
-    with open("./data/MAVEN_ERE/valid_joint.txt", 'w') as f:
-        for line in documents:
-            f.write(f"{line}\n")
-
-def llama3_skynet_api(snippet, prompt):
-    try:
-        url = 'https://turbo.skynet.coypu.org/'
-        request = requests.post(url, json={"messages": [{"role": "user",
-                                           "content": f"{prompt}\n{snippet}"}],
-                                "temperature": 0.1,
-                                "max_new_tokens": 10}).json()
-        return request.get("generated_text")
-    except Exception as e:
-        return e
+    df = pd.DataFrame({"text": documents})
+    df.to_csv("./data/MAVEN_ERE/valid_joint.csv", index=False)
 
 
 def annotate():
@@ -39,24 +26,20 @@ def annotate():
     sampling_params = SamplingParams(temperature=0.9, top_p=0.95, max_tokens=500)
     file = open(f"prompt.txt", "r")
     prompt = file.read()
-    with open("./data/MAVEN_ERE/train_joint.txt", encoding='utf-8') as f:
-        data = f.readlines()
-    prompts = [f"{prompt}\n{snippet}\n" for snippet in data]
+    df = pd.read_csv("./data/MAVEN_ERE/train_joint.csv")
+    prompts = [f"{prompt}\n{snippet}\n" for snippet in df["text"].values]
     outputs = llm.generate(prompts, sampling_params)
     generated_texts = [output.outputs[0].text for output in outputs]
     print(generated_texts[:5])
-    with open("./data/MAVEN_ERE/train_annotated.txt", 'wb', encoding="utf-8") as f:
-        for line in generated_texts:
-            f.write(f"{line}\n")
+    df["annotated_text"] = generated_texts
+    df.to_csv("./data/MAVEN_ERE/train_annotated.csv", index=False)
 
-    with open("./data/MAVEN_ERE/valid_joint.txt", encoding='utf-8') as f:
-        data = f.readlines()
-    prompts = [f"{prompt}\n{snippet}\n" for snippet in data]
+    df = pd.read_csv("./data/MAVEN_ERE/valid_joint.csv")
+    prompts = [f"{prompt}\n{snippet}\n" for snippet in df["text"].values]
     outputs = llm.generate(prompts, sampling_params)
     generated_texts = [output.outputs[0].text for output in outputs]
-    with open("./data/MAVEN_ERE/valid_annotated.txt", 'wb', encoding="utf-8") as f:
-        for line in generated_texts:
-            f.write(f"{line}\n")
+    df["annotated_text"] = generated_texts
+    df.to_csv("./data/MAVEN_ERE/valid_annotated.csv", index=False)
 
 
 if __name__ == "__main__":
