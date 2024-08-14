@@ -56,7 +56,7 @@ def annotate():
     # df.to_csv("./data/MAVEN_ERE/train_annotated.csv", index=False)
 
     df = pd.read_csv("./data/MAVEN_ERE/valid_joint.csv")
-    prompts = [f"{prompt}\n{snippet}\n\n[Paste the document here, replace the tags and remove the brackets]" for snippet in df["text"].values]
+    prompts = [f"{prompt}\n{snippet}\n\n[Paste the document here; replace the tags and remove the brackets]" for snippet in df["text"].values]
     outputs = llm.generate(prompts, sampling_params)
     generated_texts = [output.outputs[0].text for output in outputs]
     df["annotated_text"] = generated_texts
