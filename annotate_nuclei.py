@@ -3,12 +3,30 @@ from vllm import LLM, SamplingParams
 import requests
 import pandas as pd
 
+def tag_mention_per_sentence(mention: dict, tokens: list[list]):
+    tokenized_sentence = tokens[mention["sent_id"]]
+    retrieved_mention = tokenized_sentence[mention["offset"][0]: mention["offset"][1]]
+    assert retrieved_mention == mention["trigger_word"]
+    tokenized_sentence[mention["offset"][0]] = "<event>"+tokenized_sentence[mention["offset"][0]]
+    tokenized_sentence[mention["offset"][1]-1] = tokenized_sentence[mention["offset"][1]-1]+"</event>"
+    return tokenized_sentence
+
+def tag_mention_per_doc(data: dict):
+    tagged_tokens = data["tokens"]
+    for mention in data["event_mentions"]:
+        tagged_tokens[mention["sent_id"]] = tag_mention_per_sentence(mention, tagged_tokens)
+    return tokens_to_sentences(tagged_tokens)
+
+def tokens_to_sentences(tagged_tokens):
+    return ' '.join([' '.join(tagged_tokens_item) for tagged_tokens_item in tagged_tokens])
+
+
 def creating_csv():
     documents = []
     with open("./data/MAVEN_ERE/train.jsonl", 'r') as f:
         data = [json.loads(line) for line in f]
     for d in data:
-        documents.append(' '.join(d["sentences"]))
+        documents.append(tag_mention_per_doc(d))
     df = pd.DataFrame({"text": documents})
     df.to_csv("./data/MAVEN_ERE/train_joint.csv", index=False)
 
@@ -16,7 +34,7 @@ def creating_csv():
     with open("./data/MAVEN_ERE/valid.jsonl", 'r') as f:
         data = [json.loads(line) for line in f]
     for d in data:
-        documents.append(' '.join(d["sentences"]))
+        documents.append(tag_mention_per_doc(d))
     df = pd.DataFrame({"text": documents})
     df.to_csv("./data/MAVEN_ERE/valid_joint.csv", index=False)
 
