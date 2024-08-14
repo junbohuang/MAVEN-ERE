@@ -44,7 +44,8 @@ def annotate():
     prompts = [f"{prompt}\n{snippet}\n" for snippet in data]
     outputs = llm.generate(prompts, sampling_params)
     generated_texts = [output.outputs[0].text for output in outputs]
-    with open("./data/MAVEN_ERE/train_annotated.txt", 'w', encoding="utf-8") as f:
+    print(generated_texts[:5])
+    with open("./data/MAVEN_ERE/train_annotated.txt", 'wb', encoding="utf-8") as f:
         for line in generated_texts:
             f.write(f"{line}\n")
 
@@ -53,7 +54,7 @@ def annotate():
     prompts = [f"{prompt}\n{snippet}\n" for snippet in data]
     outputs = llm.generate(prompts, sampling_params)
     generated_texts = [output.outputs[0].text for output in outputs]
-    with open("./data/MAVEN_ERE/valid_annotated.txt", 'w', encoding="utf-8") as f:
+    with open("./data/MAVEN_ERE/valid_annotated.txt", 'wb', encoding="utf-8") as f:
         for line in generated_texts:
             f.write(f"{line}\n")
 
