@@ -44,7 +44,7 @@ def creating_csv():
 
 def annotate():
     llm = LLM(model="meta-llama/Meta-Llama-3-8B-Instruct", tensor_parallel_size=2)
-    sampling_params = SamplingParams(temperature=0.9, top_p=0.95, max_tokens=500)
+    sampling_params = SamplingParams(temperature=0.1, top_p=0.9, max_tokens=500)
     file = open(f"prompt.txt", "r")
     prompt = file.read()
     # df = pd.read_csv("./data/MAVEN_ERE/train_joint.csv")
