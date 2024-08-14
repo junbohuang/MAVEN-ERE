@@ -8,8 +8,6 @@ from itertools import chain
 def tag_mention_per_sentence(mention: dict, tokens: list[list]):
     tokenized_sentence = tokens[mention["sent_id"]]
     retrieved_mention = ' '.join(tokenized_sentence[mention["offset"][0]: mention["offset"][1]])
-    print("retrieved_mention:", retrieved_mention)
-    print("trigger word:", mention["trigger_word"])
     assert retrieved_mention == mention["trigger_word"]
     tokenized_sentence[mention["offset"][0]] = "<event>"+tokenized_sentence[mention["offset"][0]]
     tokenized_sentence[mention["offset"][1]-1] = tokenized_sentence[mention["offset"][1]-1]+"</event>"
@@ -18,7 +16,6 @@ def tag_mention_per_sentence(mention: dict, tokens: list[list]):
 def tag_mention_per_doc(data: dict):
     tagged_tokens = data["tokens"]
     mentions = [mention for event in data["events"] for mention in event["mention"]]
-    print(mentions)
     for mention in mentions:
         tagged_tokens[mention["sent_id"]] = tag_mention_per_sentence(mention, tagged_tokens)
     return tokens_to_sentences(tagged_tokens)
@@ -51,7 +48,7 @@ def annotate():
     file = open(f"prompt.txt", "r")
     prompt = file.read()
     # df = pd.read_csv("./data/MAVEN_ERE/train_joint.csv")
-    # prompts = [f"{prompt}\n{snippet}\n\n[Paste the document here, add the tags and remove the brackets]" for snippet in df["text"].values]
+    # prompts = [f"{prompt}\n{snippet}\n\n[Paste the document here, replace the tags and remove the brackets]" for snippet in df["text"].values]
     # outputs = llm.generate(prompts, sampling_params)
     # generated_texts = [output.outputs[0].text for output in outputs]
     # print(generated_texts[:5])
@@ -59,7 +56,7 @@ def annotate():
     # df.to_csv("./data/MAVEN_ERE/train_annotated.csv", index=False)
 
     df = pd.read_csv("./data/MAVEN_ERE/valid_joint.csv")
-    prompts = [f"{prompt}\n{snippet}\n\n[Paste the document here, add the tags and remove the brackets]" for snippet in df["text"].values]
+    prompts = [f"{prompt}\n{snippet}\n\n[Paste the document here, replace the tags and remove the brackets]" for snippet in df["text"].values]
     outputs = llm.generate(prompts, sampling_params)
     generated_texts = [output.outputs[0].text for output in outputs]
     df["annotated_text"] = generated_texts
