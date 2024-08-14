@@ -4,6 +4,8 @@ import requests
 import pandas as pd
 from itertools import chain
 from openai import OpenAI
+from tqdm import tqdm
+
 
 
 def tag_mention_per_sentence(mention: dict, tokens: list[list]):
@@ -53,7 +55,7 @@ def annotate_with_gpt4():
     client = OpenAI()
 
     generated_text = []
-    for prompt in prompts:
+    for prompt in tqdm(prompts):
         completion = client.chat.completions.create(
             model="gpt-4o",
             messages=[
