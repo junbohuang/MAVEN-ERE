@@ -4,7 +4,7 @@ import json
 def creating_csv():
     documents = []
     with open("./data/MAVEN_ERE/train.jsonl", 'r') as f:
-        data = json.load(f)
+        data = [json.loads(line) for line in f]
     for d in data:
         documents.append(' '.join(d["sentences"]))
     with open("./data/MAVEN_ERE/train_joint.txt", 'w') as f:
@@ -13,7 +13,7 @@ def creating_csv():
 
     documents = []
     with open("./data/MAVEN_ERE/valid.jsonl", 'r') as f:
-        data = json.load(f)
+        data = [json.loads(line) for line in f]
     for d in data:
         documents.append(' '.join(d["sentences"]))
     with open("./data/MAVEN_ERE/valid_joint.txt", 'w') as f:
