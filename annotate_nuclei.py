@@ -8,6 +8,8 @@ from itertools import chain
 def tag_mention_per_sentence(mention: dict, tokens: list[list]):
     tokenized_sentence = tokens[mention["sent_id"]]
     retrieved_mention = tokenized_sentence[mention["offset"][0]: mention["offset"][1]]
+    print("retrieved_mention:", retrieved_mention)
+    print("trigger word:", mention["trigger_word"])
     assert retrieved_mention == mention["trigger_word"]
     tokenized_sentence[mention["offset"][0]] = "<event>"+tokenized_sentence[mention["offset"][0]]
     tokenized_sentence[mention["offset"][1]-1] = tokenized_sentence[mention["offset"][1]-1]+"</event>"
