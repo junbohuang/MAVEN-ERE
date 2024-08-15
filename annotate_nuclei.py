@@ -48,7 +48,7 @@ def creating_csv():
 def annotate_with_gpt4():
     file = open(f"prompt.txt", "r")
     prompt = file.read()
-    df = pd.read_csv("./data/MAVEN_ERE/valid_joint.csv")
+    df = pd.read_csv("./data/MAVEN_ERE/train_joint.csv")
     prompts = [f"{prompt}\n{snippet}\n\n[Paste the document here; replace the tags and remove the brackets]" for snippet
                in df["text"].values]
 
@@ -68,7 +68,7 @@ def annotate_with_gpt4():
         )
         generated_text.append(completion.choices[0].message)
     df["annotated_text"] = generated_text
-    df.to_csv("./data/MAVEN_ERE/valid_annotated.csv", index=False)
+    df.to_csv("./data/MAVEN_ERE/train_annotated.csv")
 
 
 
